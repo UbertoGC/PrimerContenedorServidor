@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mysql
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mysql
+  template:
+    metadata:
+      labels:
+        app: mysql
+    spec:
+      containers:
+        - name: mysql
+          image: local/mysql-custom:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 3306
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              value: root
+            - name: MYSQL_DATABASE
+              value: miapp
+            - name: MYSQL_USER
+              value: usuario
+            - name: MYSQL_PASSWORD
+              value: clave
+          volumeMounts:
+          - name: init-sql
+            mountPath: /docker-entrypoint-initdb.d/init.sql
+            subPath: init.sql
+      volumes:
+      - name: init-sql
+        configMap:
+          name: mysql-init
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysql
+spec:
+  selector:
+    app: mysql
+  ports:
+    - port: 3306
+      targetPort: 3306
+  type: ClusterIP
