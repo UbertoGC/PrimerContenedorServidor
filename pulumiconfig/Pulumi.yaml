@@ -1,0 +1,11 @@
+name: primer-contenedor
+description: Conexion Pulumi con el primer contenedor en Kubernets
+runtime:
+  name: python
+  options:
+    toolchain: pip
+    virtualenv: venv
+config:
+  pulumi:tags:
+    value:
+      pulumi:template: kubernetes-python
