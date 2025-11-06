@@ -59,8 +59,8 @@ pulumi.export("kubeconfig", cluster.kubeconfig)
 
 # ECR + IMÁGENES
 auth_token = aws.ecr.get_authorization_token()
-backend_repo = aws.ecr.Repository("backend-repo")
-frontend_repo = aws.ecr.Repository("frontend-repo")
+backend_repo = aws.ecr.Repository("backend-repo", force_delete=True)
+frontend_repo = aws.ecr.Repository("frontend-repo", force_delete=True)
 def crear_imagen(name, path, repo):
     return docker.Image(
         name,
@@ -176,4 +176,5 @@ pulumi.export("rds_endpoint", rds_instance.address)
 pulumi.export("rds_username", rds_instance.username)
 pulumi.export("rds_dbname", rds_instance.db_name)
 pulumi.export("backend_repo", backend_repo.repository_url)
+
 pulumi.export("frontend_repo", frontend_repo.repository_url)
